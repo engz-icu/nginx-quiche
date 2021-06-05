@@ -48,6 +48,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: nginx-quiche
-          path: objs/nginx
+          path: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.18.0/objs/nginx
 
         
