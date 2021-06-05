@@ -55,7 +55,7 @@ jobs:
         if: github.event_name == 'release'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          asset_name: nginx-quic
+          asset_name: nginx-quiche
           file: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.18.0/objs/nginx
           tag: ${{ github.ref }}
           overwrite: true
