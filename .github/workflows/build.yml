@@ -44,7 +44,7 @@ jobs:
          wget https://github.com/Kitware/CMake/releases/download/v3.11.4/cmake-3.11.4.tar.gz
          tar zxf cmake-3.11.4.tar.gz && cd cmake-3.11.4 && ./bootstrap && sudo make && sudo make install
          sudo ln -s /usr/local/bin/cmake /usr/bin/cmake
-         curl https://sh.rustup.rs -sSf | sh
+         #curl https://sh.rustup.rs -sSf | sh -y
          
       - name: build
         run: |
