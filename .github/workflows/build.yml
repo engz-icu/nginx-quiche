@@ -26,29 +26,38 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.16
       # Runs a single command using the runners shell
       - name: nginx
         run: |
-         curl -O https://nginx.org/download/nginx-1.18.0.tar.gz
-         tar xzvf nginx-1.18.0.tar.gz
+         curl -O https://nginx.org/download/nginx-1.19.4.tar.gz
+         tar xzvf nginx-1.19.4.tar.gz
 
       # Runs a set of commands using the runners shell
       - name: quiche
         run: |
          git clone --recursive https://github.com/cloudflare/quiche
+         wget https://github.com/Kitware/CMake/releases/download/v3.11.4/cmake-3.11.4.tar.gz
+         tar zxf cmake-3.11.4.tar.gz && cd cmake-3.11.4 && ./bootstrap && make && make install
+         ln -s /usr/local/bin/cmake /usr/bin/cmake
+         curl https://sh.rustup.rs -sSf | sh
          
       - name: build
         run: |
-         cd nginx-1.18.0
+         cd nginx-1.19.4
          patch -p01 < ../quiche/extras/nginx/nginx-1.16.patch
+         curl https://raw.githubusercontent.com/kn007/patch/master/Enable_BoringSSL_OCSP.patch | patch -p1
          ./configure --prefix=$PWD --build="quiche-$(git --git-dir=../quiche/.git rev-parse --short HEAD)" --with-http_ssl_module --with-http_v2_module --with-http_v3_module --with-openssl=../quiche/deps/boringssl --with-quiche=../quiche
          make
          
       - uses: actions/upload-artifact@v2
         with:
           name: nginx-quiche
-          path: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.18.0/objs/nginx
+          path: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.19.4/objs/nginx
           
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
@@ -56,7 +65,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           asset_name: nginx-quiche
-          file: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.18.0/objs/nginx
+          file: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.19.4/objs/nginx
           tag: ${{ github.ref }}
           overwrite: true
 
