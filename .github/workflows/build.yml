@@ -57,7 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: nginx-quiche
-          path: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.19.4/objs/nginx
+          path: /home/runner/work/nginx-quiche/nginx-quiche/nginx-1.19.4/objs/
           
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
